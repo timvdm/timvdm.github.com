@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="jchemhub" default="usage">
+
+	<property name="base.dir" location="." />
+	<property name="build.dir" value="${base.dir}/build" />
+	<property name="test.dir" location="${base.dir}/test/java" />
+	<property name="doc.dir" value="${base.dir}/docs" />
+	<property name="jsdoc.dir" value="${base.dir}/third-party/jsdoc-toolkit" />
+	<property name="closure-library.dir" value="${base.dir}/third-party/closure/closure" />
+	<property name="closure-compiler.jar" value="${base.dir}/third-party/closure-compiler/compiler.jar" />
+	<property name="js-src.dir" value="${base.dir}/jchemhub" />
+	<property name="selenium-server.jar" value="${base.dir}/third-party/selenium-server-1.0.3/selenium-server.jar" />
+	<property name="selenium-java-client.jar" value="${base.dir}/third-party/selenium-java-client-driver-1.0.1/selenium-java-client-driver.jar" />
+	<property name="junit.jar" value="${base.dir}/third-party/junit/junit-4.8.2.jar" />
+	<path id="input-files">
+		<filelist dir="${js-src.dir}/controller">
+			<file name="reaction_editor.js" />
+			<file name="defaulttoolbar.js" />
+			<file name="toolbarcontroller.js" />
+		</filelist>
+		<fileset dir="${js-src.dir}/controller/plugins" />
+		<filelist dir="${js-src.dir}/io">
+			<file name="json.js" />
+		</filelist>
+	</path>
+
+	<pathconvert pathsep=' -i ' property="jsfiles" refid="input-files" />
+
+	<path id="classpath.test">
+		<pathelement location="${selenium-java-client.jar}" />
+		<pathelement location="${junit.jar}" />
+		<pathelement location="${test.dir}" />
+	</path>
+
+	<target name="compile-test">
+		<delete >
+			<fileset dir="${test.dir}" includes="**/*.class" />
+		</delete>
+		<javac srcdir="${test.dir}" >
+			<classpath refid="classpath.test" />
+		</javac>
+	</target>
+
+	<target name="test" depends="compile-test" description="Run Selenium unit tests">
+		<junit>
+			<classpath refid="classpath.test" />
+			<formatter type="brief" usefile="false" />
+			<test name="com.jchemhub.ModelTest" />
+		</junit>
+	</target>
+
+	<macrodef name="calcdeps">
+		<attribute name="outputfile" />
+		<attribute name="compilerjarfile" default="${closure-compiler.jar}" />
+		<attribute name="compilationlevel" default="ADVANCED_OPTIMIZATIONS" />
+		<attribute name="outputmode" default="compiled" />
+		<element name="extraflags" optional="yes" />
+		<sequential>
+			<mkdir dir="${build.dir}" />
+			<exec executable="python" failonerror="true" logError="true" output="${build.dir}/@{outputfile}">
+				<arg value="${closure-library.dir}/bin/calcdeps.py" />
+				<arg line='-i ${jsfiles}' />
+				<arg line='-p ${closure-library.dir}' />
+				<arg line='-p ${js-src.dir}' />
+				<arg line="-o @{outputmode}" />
+				<arg line='-c "@{compilerjarfile}"' />
+				<arg line='-f "--compilation_level=@{compilationlevel}"' />
+				<arg line='-f "--jscomp_warning=checkTypes"' />
+				<arg line='-f "--jscomp_warning=accessControls"' />
+				<arg line='-f "--jscomp_warning=missingProperties"' />
+				<arg line='-f "--jscomp_warning=unknownDefines"' />
+				<arg line='-f "--jscomp_warning=strictModuleDepCheck"' />
+
+				<extraflags />
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<target name="clean" description="delete generated files">
+		<delete dir="${build.dir}" />
+		<delete dir="${doc.dir}" />
+	</target>
+
+	<target name="build-deps" description="rebuild deps.js file">
+		<exec executable="python" failonerror="true" logError="true" output="${js-src.dir}/deps.js">
+			<arg value="${closure-library.dir}/bin/calcdeps.py" />
+			<arg line='-p "${closure-library.dir}"' />
+			<arg line='-p "${js-src.dir}"' />
+			<arg line="-o deps" />
+		</exec>
+	</target>
+
+	<target name="build-docs" description="build the JsDoc documentation">
+		<exec executable="java" failonerror="true" logError="true" output="${base.dir}/jsdoc.log">
+			<arg line="-jar ${jsdoc.dir}/jsrun.jar ${jsdoc.dir}/app/run.js -r=10 ${js-src.dir} -t=${jsdoc.dir}/templates/jchemhub/ -d=${doc.dir}" />
+		</exec>
+	</target>
+
+	<target name='compile-check' description='check by compiling all jchemhub files'>
+		<mkdir dir="${build.dir}" />
+		<exec executable="python" failonerror="true" logError="true" output="${build.dir}/compile-check.js">
+			<arg value="${closure-library.dir}/bin/calcdeps.py" />
+			<arg line='-i ${js-src.dir}' />
+			<arg line='-p ${closure-library.dir}' />
+			<arg line='-p ${js-src.dir}' />
+			<arg line="-o compiled" />
+			<arg line='-c "${closure-compiler.jar}"' />
+			<arg line='-f "--compilation_level=ADVANCED_OPTIMIZATIONS"' />
+			<arg line='-f "--jscomp_warning=checkTypes"' />
+		</exec>
+	</target>
+
+	<target name="compile-advanced" description="compile with ADVANCED_OPTIMIZATIONS setting">
+		<calcdeps outputfile="jchemhub-advanced.js" />
+	</target>
+
+	<target name="compile-simple" description="compile with SIMPLE_OPTIMIZATIONS setting">
+		<calcdeps outputfile="jchemhub-simple.js" compilationlevel="SIMPLE_OPTIMIZATIONS" />
+	</target>
+
+	<target name="compile-whitespace-only" description="compile with WHITESPACE_ONLY setting">
+		<calcdeps outputfile="jchemhub-whitespace-only.js" compilationlevel="WHITESPACE_ONLY" />
+	</target>
+
+	<target name="usage" description="Display main targets by running 'ant -projecthelp'">
+		<java classname="org.apache.tools.ant.Main">
+			<arg value="-projecthelp" />
+		</java>
+	</target>
+
+</project>

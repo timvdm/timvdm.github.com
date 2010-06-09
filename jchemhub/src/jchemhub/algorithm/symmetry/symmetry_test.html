@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+TODO: License
+Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
+-->
+<html>
+<head>
+<title>jchemhub unit ring_finder.js</title>
+<script src="../../../third-party/closure/closure/goog/base.js"></script>
+<script src="../../deps.js"></script>
+<script>
+            goog.require('goog.testing.jsunit');
+            goog.require('jchemhub.io.mdl');
+            goog.require('jchemhub.symmetry.Symmetry');
+        </script>
+<script>
+            function debug(text, noNewLine) {
+                var logDiv = document.getElementById("logDiv");
+                if (!logDiv) {
+                    var body = document.getElementsByTagName("body")[0];
+                    logDiv = document.createElement("div");
+                    logDiv.id = "logDiv";
+                    body.appendChild(logDiv);
+                }
+                if (noNewLine) {
+                    logDiv.innerHTML += text;
+                } else {
+                    logDiv.innerHTML += text + "<br>";
+                }
+            }
+
+            function testBenzene(){
+                var benzene = "\n  xxx     10310613082D          \n\n  6  6  0  0  0  0            999 V2000\n    0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.0000   -0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.7145    0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.0000    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.7145    0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n  2  1  2  0  0  0  0\n  3  1  1  0  0  0  0\n  4  3  2  0  0  0  0\n  5  2  1  0  0  0  0\n  6  4  1  0  0  0  0\n  5  6  2  0  0  0  0\nM  END\n";
+                findSymmetryClasses("benzene", benzene, 1);
+            }
+
+            function testSymmetry1() {
+                var molfile = "\n OpenBabel11010922402D\n\n 14 15  0  0  0  0  0  0  0  0999 V2000\n  -14.8000   -3.6250    0.0000 C   0  0  0  0  0\n  -13.9340   -4.1250    0.0000 C   0  0  0  0  0\n  -13.9340   -5.1250    0.0000 C   0  0  0  0  0\n  -14.8000   -5.6250    0.0000 C   0  0  0  0  0\n  -15.6660   -5.1250    0.0000 C   0  0  0  0  0\n  -15.6660   -4.1250    0.0000 C   0  0  0  0  0\n  -14.7984   -6.6250    0.0000 C   0  0  0  0  0\n  -14.8000   -2.6250    0.0000 C   0  0  0  0  0\n  -15.6660   -2.1250    0.0000 C   0  0  0  0  0\n  -15.6660   -1.1250    0.0000 C   0  0  0  0  0\n  -14.8000   -0.6250    0.0000 C   0  0  0  0  0\n  -13.9340   -1.1250    0.0000 C   0  0  0  0  0\n  -13.9340   -2.1250    0.0000 C   0  0  0  0  0\n  -14.8000    0.3750    0.0000 C   0  0  0  0  0\n  1  2  1  0  0  0\n  6  1  1  0  0  0\n  1  8  1  0  0  0\n  2  3  1  0  0  0\n  3  4  1  0  0  0\n  4  5  1  0  0  0\n  4  7  1  0  0  0\n  5  6  1  0  0  0\n  8  9  1  0  0  0\n 13  8  1  0  0  0\n  9 10  1  0  0  0\n 10 11  1  0  0  0\n 11 12  1  0  0  0\n 11 14  1  0  0  0\n 12 13  1  0  0  0\nM  END\n";
+                findSymmetryClasses("symmetry1", molfile, 5);
+            }
+           
+
+            function testSymmetry2() {
+                var molfile = "\n OpenBabel11010922412D\n\n 16 19  0  0  0  0  0  0  0  0999 V2000\n   -9.0750   -3.5000    0.0000 C   0  0  0  0  0\n   -8.2090   -4.0000    0.0000 C   0  0  0  0  0\n   -8.2090   -5.0000    0.0000 C   0  0  0  0  0\n   -9.0750   -5.5000    0.0000 C   0  0  0  0  0\n   -9.9410   -5.0000    0.0000 C   0  0  0  0  0\n   -9.9410   -4.0000    0.0000 C   0  0  0  0  0\n  -10.8921   -5.3090    0.0000 C   0  0  0  0  0\n  -11.4799   -4.5000    0.0000 C   0  0  0  0  0\n  -10.8921   -3.6910    0.0000 C   0  0  0  0  0\n  -12.4799   -4.5024    0.0000 C   0  0  0  0  0\n  -11.4757   -6.2320    0.0000 C   0  0  0  0  0\n  -12.4757   -6.2344    0.0000 C   0  0  0  0  0\n  -12.9778   -5.3696    0.0000 C   0  0  0  0  0\n  -12.9819   -3.6376    0.0000 C   0  0  0  0  0\n  -12.4840   -2.7703    0.0000 C   0  0  0  0  0\n  -11.4840   -2.7680    0.0000 C   0  0  0  0  0\n  1  2  1  0  0  0\n  6  1  1  0  0  0\n  2  3  1  0  0  0\n  3  4  1  0  0  0\n  4  5  1  0  0  0\n  5  6  1  0  0  0\n  5  7  1  0  0  0\n  9  6  1  0  0  0\n  7  8  1  0  0  0\n  7 11  1  0  0  0\n  8  9  1  0  0  0\n  8 10  1  0  0  0\n 16  9  1  0  0  0\n 13 10  1  0  0  0\n 10 14  1  0  0  0\n 11 12  1  0  0  0\n 12 13  1  0  0  0\n 14 15  1  0  0  0\n 15 16  1  0  0  0\nM  END\n";
+                findSymmetryClasses("symmetry2", molfile, 9);
+            }
+           
+
+
+
+            function findSymmetryClasses(name, mdlString, count){
+                var mol = jchemhub.io.mdl.readMolfile(mdlString);
+                var symClasses = jchemhub.symmetry.Symmetry.findSymmetryClasses(mol);
+                assertEquals(count, jchemhub.symmetry.countSymmetryClasses(symClasses));
+                debug(JSON.stringify(symClasses));
+            }
+            
+        </script>
+</head>
+<body>
+</body>
+</html>

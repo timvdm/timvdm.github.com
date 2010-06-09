@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>jchemhub.view.AtomRenderer</title>
+<!-- 
+ <script src="../../jchemhub_compiled.js"></script>
+ -->
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+
+<script>
+	goog.require('jchemhub.view.AtomRenderer');
+	goog.require('jchemhub.model.Atom');
+	goog.require('jchemhub.model.Molecule');
+	goog.require('jchemhub.model.SingleBond');
+	goog.require('jchemhub.model.DoubleBond');
+	goog.require('jchemhub.model.TripleBond');
+	goog.require('goog.events.EventType');
+	goog.require('goog.dom');
+	goog.require('goog.graphics');
+	goog.require('jchemhub.graphics.AffineTransform');
+	goog.require('goog.debug.Console');
+</script>
+<script>
+    
+function initPage(){
+
+// note:  uncomment the next two lines to turn on console logging
+//	var c = new goog.debug.Console(); 
+//	c.setCapturing(true); 
+
+	var element = goog.dom.getElement('container')
+	var graphics = goog.graphics.createGraphics(element.clientWidth,
+			element.clientHeight);
+	var group = graphics.createGroup();
+	graphics.render(element);
+	var r = new jchemhub.view.AtomRenderer(null, graphics);
+	
+	var trans = new jchemhub.graphics.AffineTransform(20,0,0,-20,0,0);
+	var mol1 = new jchemhub.model.Molecule();
+	var c1 = new jchemhub.model.Atom("C", 2, -2);
+	var o1 = new jchemhub.model.Atom("O", 3, -3);
+	mol1.addBond(new jchemhub.model.SingleBond(c1, o1));
+	r.render(c1, trans, group);
+	r.render(o1, trans, group);
+	
+	var mol2 = new jchemhub.model.Molecule();
+	var c2 = new jchemhub.model.Atom("C", 5, -2);
+	var o2 = new jchemhub.model.Atom("O", 6, -2);
+	mol2.addBond(new jchemhub.model.DoubleBond(c2, o2));
+	trans = new jchemhub.graphics.AffineTransform(30,0,0,-30,0,0);
+	r.render(c2, trans, group);
+	r.render(o2, trans, group);
+	
+	var mol3 = new jchemhub.model.Molecule();
+	var c3 = new jchemhub.model.Atom("C", 7, -2);
+	var c4 = new jchemhub.model.Atom("C", 8, -2);
+	mol3.addBond(new jchemhub.model.TripleBond(c3, c4));
+	trans = new jchemhub.graphics.AffineTransform(40,0,0,-40,0,0);
+	r.render(c3, trans, group);
+	r.render(c4, trans, group);
+	
+	var mol4 = new jchemhub.model.Molecule();
+	var n = new jchemhub.model.Atom("N", 2, -4);
+	var s = new jchemhub.model.Atom("S", 2, -5);
+	var p = new jchemhub.model.Atom("P", 4, -4);
+	var cl = new jchemhub.model.Atom("Cl", 4, -5); 
+	var f = new jchemhub.model.Atom("F", 6, -4);
+	var br = new jchemhub.model.Atom("Br", 6, -5);
+	var i = new jchemhub.model.Atom("I", 8, -4);
+	var h = new jchemhub.model.Atom("H", 8, -5);
+	mol4.addBond(new jchemhub.model.SingleBond(n,s));
+	mol4.addBond(new jchemhub.model.SingleBond(p, cl));
+	mol4.addBond(new jchemhub.model.SingleBond(f, br));
+	mol4.addBond(new jchemhub.model.SingleBond(i,h));
+	
+	trans = new jchemhub.graphics.AffineTransform(30,0,0,-30,0,0);
+	r.render(n, trans, group);
+	r.render(s, trans, group);
+	r.render(p, trans, group);
+	r.render(cl, trans, group);
+	r.render(f, trans, group);
+	r.render(br, trans, group);
+	r.render(i, trans, group);
+	r.render(h, trans, group);
+};
+
+goog.events.listen(window, goog.events.EventType.LOAD, initPage);
+</script>
+</head>
+
+<body>
+<div id="container" style="width: 400px; height: 400px"></div>
+
+</body>
+</html>

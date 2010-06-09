@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>jchemhub.controller.ReactionEditor</title>
+<!-- 
+ <script src="../../jchemhub_compiled.js"></script>
+ -->
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+
+<script src="../io/json_test_rxn.js"></script>
+<script src="../json/json_templates.js"></script>
+
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/demos/css/demo.css">
+
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/button.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/dialog.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/linkbutton.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/menus.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/tab.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/tabbar.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/toolbar.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/colormenubutton.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/palette.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/colorpalette.css" />
+
+
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/editortoolbar.css" />
+
+<script>
+
+	goog.require('goog.events.EventType');
+	goog.require('goog.dom');
+	goog.require('jchemhub.io.json');
+	goog.require('jchemhub.controller.DefaultToolbar');
+	goog.require('jchemhub.controller.ToolbarController');
+	goog.require('jchemhub.controller.plugins.ClearEditor');
+	goog.require('jchemhub.controller.plugins.Zoom');
+	goog.require('jchemhub.controller.plugins.UndoRedo');
+	goog.require('jchemhub.controller.plugins.Highlight');
+	goog.require('jchemhub.controller.plugins.SymbolSelect');
+	goog.require('jchemhub.controller.plugins.BondSelect');
+	goog.require('goog.debug.Console');
+
+</script>
+<script><!--
+    
+	var controller;
+	
+function initPage(){
+	// uncomment next two lines to debug to console
+	var c = new goog.debug.Console(); 
+	c.setCapturing(true); 
+
+	var toolbar = jchemhub.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
+	var model = jchemhub.io.json.readReaction(reactionDrawing); 
+	var editor = new jchemhub.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'));
+	editor.registerPlugin(new jchemhub.controller.plugins.ClearEditor());
+	editor.registerPlugin(new jchemhub.controller.plugins.Zoom());
+	editor.registerPlugin(new jchemhub.controller.plugins.UndoRedo());
+	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
+	editor.registerPlugin(new jchemhub.controller.plugins.SymbolSelect());
+	editor.registerPlugin(new jchemhub.controller.plugins.BondSelect());
+	
+    var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
+	editor.setModel(model);
+	
+	
+	var container = goog.dom.getElement('moleculeContainers');
+	goog.array.forEach(templates, function(json_mol){
+		var mol = jchemhub.io.json.readMolecule(json_mol);
+		var el = goog.dom.createDom('td', {'style': 'width: 150px; height: 150px'});
+		goog.dom.appendChild(container, el);
+    	var ed = new jchemhub.controller.ReactionEditor(el);
+		ed.setModel(mol);
+	});
+};
+
+
+goog.events.listen(window, goog.events.EventType.LOAD, initPage);
+--></script>
+</head>
+
+<body>
+<table style="width: 100%">
+	<tr>
+		<td>
+		<div id="reactionEditorToolbar"></div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<div style="width: 600px; height: 300px; overflow: auto; padding: 5px">
+			<div id="reactionEditorContainer" style="width: 1000px;height: 400px"></div>
+		</div>
+		</td>
+	</tr>
+	<tr>
+
+		<div id="moleculeContainers"></div>
+
+	</tr>
+</table>
+
+
+
+
+</body>
+</html>

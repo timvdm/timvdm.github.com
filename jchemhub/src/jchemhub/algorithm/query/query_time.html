@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--TODO: License and copyright-->
+<html>
+<head>
+<title>jchemhub unit test-smiles.js</title>
+<script src="../../../third-party/closure/closure/goog/base.js"></script>
+<script src="../../deps.js"></script>
+<script>
+        goog.require('goog.testing.jsunit');
+        goog.require('jchemhub.io.smiles');
+        goog.require('jchemhub.query.DFSMapper');
+        goog.require('jchemhub.query.SmilesCompiler');
+</script>
+<script src="../../io/qsmiles/smiles_test_mols.js"></script>
+<script><!--
+function debug(text, noNewLine) {
+    var logDiv = document.getElementById("logDiv");
+    if (!logDiv) {
+        var body = document.getElementsByTagName("body")[0];
+        logDiv = document.createElement("div");
+        logDiv.id = "logDiv";
+        body.appendChild(logDiv);
+    }
+    if (noNewLine) {
+        logDiv.innerHTML += text;
+    } else {
+        logDiv.innerHTML += text + "<br>";
+    }
+}
+
+        function callback(maps) {
+       }
+
+
+        var i = 0;
+        function doNext() {
+            var query = jchemhub.query.SmilesCompiler.compile('c1ccccc1');
+            var mapper = new jchemhub.query.DFSMapper(query);
+            var molecule = jchemhub.io.smiles.parse(smiles[i]);
+            var maps = mapper.mapAll(molecule);
+            debug("match " + (i+1) + ": " + maps.length);
+            i++;
+            if (i < smiles.length) {
+                setTimeout(doNext, 0);
+            }
+        }
+
+
+  	function testTimeParse() {
+            doNext();
+	}
+
+
+--></script>
+</head>
+<body>
+</body>
+</html>

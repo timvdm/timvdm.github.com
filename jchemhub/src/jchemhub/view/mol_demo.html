@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>jchemhub.view.MoleculeRenderer</title>
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script src="../io/io_test_molsample.js"></script>
+
+<script>
+    goog.require('jchemhub.view.MoleculeRenderer');
+    goog.require('jchemhub.view.SingleBondRenderer');
+    goog.require('jchemhub.view.SingleUpBondRenderer');
+    goog.require('jchemhub.view.SingleDownBondRenderer');
+    goog.require('jchemhub.view.SingleUpOrDownBondRenderer');
+    goog.require('jchemhub.view.DoubleBondRenderer');
+    goog.require('jchemhub.view.TripleBondRenderer');
+    goog.require('jchemhub.view.QuadrupleBondRenderer');
+    goog.require('jchemhub.model.Atom');
+    goog.require('jchemhub.model.Molecule');
+    goog.require('jchemhub.model.SingleBond');
+    goog.require('jchemhub.model.SingleBondUp');
+    goog.require('jchemhub.model.SingleBondDown');
+    goog.require('jchemhub.model.SingleBondUpOrDown');  
+    goog.require('jchemhub.model.DoubleBond');
+    goog.require('jchemhub.model.TripleBond');
+    goog.require('jchemhub.model.QuadrupleBond');
+    goog.require('goog.events.EventType');
+    goog.require('goog.dom');
+    goog.require('goog.graphics');
+    goog.require('jchemhub.graphics.AffineTransform');
+    goog.require('goog.debug.Console');
+    goog.require('jchemhub.io.mdl');
+
+</script>
+<script>
+    
+function initPage(){
+
+    var c = new goog.debug.Console(); 
+    c.setCapturing(true); 
+    var element = goog.dom.getElement('container')
+    var graphics = goog.graphics.createGraphics(element.clientWidth,
+            element.clientHeight);
+    var group = graphics.createGroup();
+    graphics.render(element);
+    var r = new jchemhub.view.MoleculeRenderer(null, graphics);
+    var trans = new jchemhub.graphics.AffineTransform(50,0,0,50,0,0);
+
+    var sdfs = sdf.split("$$$$\n");
+    var displayIdx=[3,4,5,6]; 
+
+    var mol = new jchemhub.model.Molecule();
+	
+    for (x=0; x<displayIdx.length; x++) {    
+	    var molfile=sdfs[displayIdx[x]];
+	    var mol=jchemhub.io.mdl.readMolfile(molfile);
+
+		//shift X
+		for(j=0; j<mol.countAtoms(); j++){
+			mol.getAtom(j).coord.x=mol.getAtom(j).coord.x+(x*10);
+		}
+
+    	r.render(mol, trans, group);
+    }
+};
+
+goog.events.listen(window, goog.events.EventType.LOAD, initPage);
+</script>
+</head>
+
+<body>
+<div id="container" style="width: 8192px; height: 800px"></div>
+
+</body>
+</html>
