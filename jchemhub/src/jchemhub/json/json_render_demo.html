@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--TODO: License and copyright-->
+<html>
+<head>
+<title>Simple graphics demo</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script src="../io/json_test_mol.js"></script>
+<script>  
+    goog.require('jchemhub.controller.Controller');
+	goog.require('jchemhub.io.json');
+	goog.require('goog.events.EventType');
+	goog.require('goog.dom');
+</script>
+
+<script>
+function initPage(){
+	var model = jchemhub.io.json.readMolecule(jmol);
+	var controller = new jchemhub.controller.Controller(goog.dom.getElement('reactionEditorContainer'));
+	controller.setModel(model);
+};
+
+goog.events.listen(window, goog.events.EventType.LOAD, initPage);
+</script>
+</head>
+
+<body>
+
+	<div id="reactionEditorContainer" style="width: 400px; height: 200px"></div>
+	<p>Simply move your mouse on atoms and bonds</p>
+    
+</body>
+</html>

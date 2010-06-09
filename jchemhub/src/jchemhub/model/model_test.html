@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--TODO: License and copyright-->
+<html>
+<head>
+<title>jchemhub unit test-core.js</title>
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script>
+	goog.require('goog.testing.jsunit');
+	goog.require('jchemhub.model.Molecule');
+	goog.require('jchemhub.model.Atom');
+    goog.require('jchemhub.model.Atom.Hybridizations');
+	goog.require('jchemhub.model.SingleBond');
+	goog.require('jchemhub.model.SingleBondUp');
+	goog.require('jchemhub.model.AromaticBond');
+	goog.require('jchemhub.model.DoubleBond');
+    goog.require('jchemhub.model.PseudoAtom');
+</script>
+<script>
+	var mol;
+ 
+  	function setUp() {
+ 		mol=new jchemhub.model.Molecule;
+  	}
+
+
+	function testAddAtom() {
+		mol.addAtom(new jchemhub.model.Atom("C"));
+		mol.addAtom(new jchemhub.model.Atom("C"));
+		mol.addAtom(new jchemhub.model.Atom("N"));
+		mol.addAtom(new jchemhub.model.Atom("O"));
+		mol.addAtom(new jchemhub.model.Atom("Cl"));
+
+  		assertEquals(5,mol.countAtoms());
+		assertEquals("N",mol.getAtom(2).symbol);
+		assertEquals("O",mol.getAtom(3).symbol);
+		assertEquals("Cl",mol.getAtom(4).symbol);
+		
+		assertEquals(2,mol.indexOfAtom(mol.getAtom(2)));
+		assertEquals(0,mol.indexOfAtom(mol.getAtom(0)));
+
+	}
+	
+  	function testAddBond() {
+		var atom1=new jchemhub.model.Atom("C");
+		var atom2=new jchemhub.model.Atom("C");
+		var atom3=new jchemhub.model.Atom("C");
+		var atom4=new jchemhub.model.Atom("O");
+		
+		mol.addBond(new jchemhub.model.Bond(atom1,atom2));
+		mol.addBond(new jchemhub.model.Bond(atom2,atom3));
+		mol.addBond(new jchemhub.model.Bond(atom3,atom4));
+
+        assertEquals(2,atom2.countBonds());
+
+        assertEquals(1,atom1.countBonds());
+
+  		assertEquals(3,mol.countBonds());
+	}
+	
+	function testRemoveAtom(){
+		var atom1=new jchemhub.model.Atom("C");
+		var atom2=new jchemhub.model.Atom("C");
+		var atom3=new jchemhub.model.Atom("C");
+		var atom4=new jchemhub.model.Atom("O");
+		
+		mol.addAtom(atom1);
+		mol.addAtom(atom2);
+		mol.addAtom(atom3);
+		mol.addAtom(atom4);
+        
+        var bond1=new jchemhub.model.Bond(atom1,atom2);
+        var bond2=new jchemhub.model.Bond(atom2,atom3);
+        var bond3=new jchemhub.model.Bond(atom3,atom4);
+
+
+        mol.addBond(bond1);
+        mol.addBond(bond2);
+        mol.addBond(bond3);
+
+  		assertEquals(4,mol.countAtoms());
+		
+		mol.removeAtom(atom2);
+
+        assertEquals(1,mol.countBonds());
+
+		assertEquals(3,mol.countAtoms());
+
+		mol.removeAtom(0);
+		
+		assertEquals(2,mol.countAtoms());
+
+	}
+	
+	function testRemoveBond(){
+		var atom1=new jchemhub.model.Atom("C");
+		var atom2=new jchemhub.model.Atom("C");
+		var atom3=new jchemhub.model.Atom("C");
+		var atom4=new jchemhub.model.Atom("O");
+		
+		mol.addAtom(atom1);
+		mol.addAtom(atom2);
+		mol.addAtom(atom3);
+		mol.addAtom(atom4);
+		
+		var bond1=new jchemhub.model.Bond(atom1,atom2);
+		var bond2=new jchemhub.model.Bond(atom2,atom3);
+		var bond3=new jchemhub.model.Bond(atom3,atom4);
+		
+
+		mol.addBond(bond1);
+		mol.addBond(bond2);
+		mol.addBond(bond3);
+
+  		assertEquals(3,mol.countBonds());
+		
+		mol.removeBond(bond3);
+        assertEquals(false,atom3.bonds.contains(bond3));
+		assertEquals(2,mol.countBonds());
+
+		mol.removeBond(0);		
+		assertEquals(1,mol.countBonds());
+	}
+  	
+
+    function testPseudoAtom(){
+		var pseudoAtom= new jchemhub.model.PseudoAtom();
+		assertEquals("R",pseudoAtom.symbol);
+        assertEquals("*",pseudoAtom.label);
+	}
+
+    function testHybridization(){
+        var atom=new jchemhub.model.Atom("C");
+		atom.hybridization=jchemhub.model.Atom.Hybridizations.SP2;
+        assertEquals(jchemhub.model.Atom.Hybridizations.SP2,atom.hybridization);
+    }
+    
+    function testImplicitHydrogenCountAromatic(){
+    
+		var atom1=new jchemhub.model.Atom("C");
+		var atom2=new jchemhub.model.Atom("C");
+		var atom3=new jchemhub.model.Atom("C");
+		var atom4=new jchemhub.model.Atom("C");
+		var atom5=new jchemhub.model.Atom("C");
+		var atom6=new jchemhub.model.Atom("C");
+		
+		mol.addBond(new jchemhub.model.AromaticBond(atom1,atom2));
+		mol.addBond(new jchemhub.model.AromaticBond(atom2,atom3));
+		mol.addBond(new jchemhub.model.AromaticBond(atom3,atom4));
+		mol.addBond(new jchemhub.model.AromaticBond(atom4,atom5));
+		mol.addBond(new jchemhub.model.AromaticBond(atom5,atom6));
+		mol.addBond(new jchemhub.model.AromaticBond(atom6,atom1));
+		
+		assertEquals(1, atom1.hydrogenCount());
+		assertEquals(1, atom2.hydrogenCount());
+		assertEquals(1, atom3.hydrogenCount());
+	}
+	
+	    function testImplicitHydrogenCount(){
+    
+		var atom1=new jchemhub.model.Atom("C");
+		var atom2=new jchemhub.model.Atom("C");
+		var atom3=new jchemhub.model.Atom("C");
+		var atom4=new jchemhub.model.Atom("C");
+		
+		mol.addBond(new jchemhub.model.SingleBond(atom1,atom2));
+		mol.addBond(new jchemhub.model.SingleBondUp(atom2,atom3));
+		mol.addBond(new jchemhub.model.DoubleBond(atom3,atom4));
+		
+		assertEquals(3, atom1.hydrogenCount());
+		assertEquals(2, atom2.hydrogenCount());
+		assertEquals(1, atom3.hydrogenCount());
+	}
+
+
+
+</script>
+</head>
+<body>
+</body>
+</html>

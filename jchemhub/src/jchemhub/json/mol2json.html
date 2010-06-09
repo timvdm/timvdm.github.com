@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--TODO: License and copyright-->
+<html>
+<head>
+<title>Molblock to JSON with render</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script>
+    goog.require('jchemhub.controller.Controller');
+	goog.require('jchemhub.io.json');
+	goog.require('goog.events.EventType');
+	goog.require('goog.dom');
+	goog.require('goog.format.JsonPrettyPrinter');
+</script>
+
+<script src="../render/render_demo_molsample.js"></script>
+
+<script>
+function loadMol() {
+	molblock = document.getElementById("molblock");
+	molblock.value = molsample;
+}
+function showMol(molblock) {
+	var mol = jchemhub.io.mdl.readMolfile(molblock);
+	showJSON(mol);
+	renderMol(mol);
+}
+function showJSON(mol) {
+	var jblock = document.getElementById("jsonblock");
+	var pretty = new goog.format.JsonPrettyPrinter();
+	jblock.value = pretty.format( jchemhub.io.json.writeMolecule(mol));
+}
+function renderMol(mol) {
+
+	//var model = jchemhub.io.json.readMolecule(jmol);
+	var controller = new jchemhub.controller.Controller(goog.dom.getElement('reactionEditorContainer'));
+	controller.setModel(mol);
+}
+	
+</script>
+</head>
+<body onLoad="loadMol()">
+<form>
+Paste molfile here and <input type=button value="render" onClick="showMol(molblock.value)"><br>
+<textarea id="molblock" name="molblock" cols=80 rows=16>Paste molblock here</textarea>
+
+<BR>
+<textarea id="jsonblock" cols=80 rows=16>JSON will appear here</textarea>
+</form>
+
+	<div id="reactionEditorContainer" style="width: 400px; height: 400px; position: absolute; top: 200px; left: 600px;"></div>
+    
+</body>
+</html>
