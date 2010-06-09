@@ -1,0 +1,90 @@
+<html>
+<head>
+<style>
+
+  body {
+    font: 14px Sans-Serif;
+  }
+
+
+
+</style>
+<script src="names.js"></script>
+<script>
+  
+  var Firefox = 0, Chrome = 1, IE6 = 2, IE7 = 3;
+
+  function generateContent() {
+
+    var html = '';
+    if (browsers.indexOf(Firefox) != -1) {
+      html  = '<h1>Firefox 3.6.3 - Windows XP</h1>';
+      html += '<table><tr><td>Reference snapshots</td><td>Latest snapshots</td><td>Delta</td></tr>';
+      for (var i = 0; i < names.length; i++) {
+        var name = names[i];
+        html += '<tr><td><a href="reference/' + name + '.firefox.png">';
+        html += '<img src="reference/' + name + '.firefox.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.firefox.png">';
+        html += '<img src="latest/' + name + '.firefox.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.firefox.delta.png">';
+        html += '<img src="latest/' + name + '.firefox.delta.thumb.png"></a></td></tr>';
+      }
+      html += '</table>';
+    }
+    
+    if (browsers.indexOf(Chrome) != -1) {
+      html += '<h1>Chrome 5.0 - Windows XP</h1>';
+      html += '<table><tr><td>Reference snapshots</td><td>Latest snapshots</td><td>Delta</td></tr>';
+      for (var i = 0; i < names.length; i++) {
+        var name = names[i];
+        html += '<tr><td><a href="reference/' + name + '.chrome.png">';
+        html += '<img src="reference/' + name + '.chrome.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.chrome.png">';
+        html += '<img src="latest/' + name + '.chrome.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.chrome.delta.png">';
+        html += '<img src="latest/' + name + '.chrome.delta.thumb.png"></a></td></tr>';
+      }
+      html += '</table>';
+    }
+ 
+    if (browsers.indexOf(IE6) != -1) {
+      html += '<h1>Internet Explorer 6.0 - Microsoft Windows</h1>';
+      html += '<table><tr><td>Reference snapshots</td><td>Latest snapshots</td><td>Delta</td></tr>';
+      for (var i = 0; i < names.length; i++) {
+        var name = names[i];
+        html += '<tr><td><a href="reference/' + name + '.ie6.png">';
+        html += '<img src="reference/' + name + '.ie6.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.ie6.png">';
+        html += '<img src="latest/' + name + '.ie6.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.ie6.delta.png">';
+        html += '<img src="latest/' + name + '.ie6.delta.thumb.png"></a></td></tr>';
+      }
+      html += '</table>';
+    }
+ 
+    if (browsers.indexOf(IE7) != -1) {
+      html += '<h1>Internet Explorer 7.0 - Microsoft Windows</h1>';
+      html += '<table><tr><td>Reference snapshots</td><td>Latest snapshots</td><td>Delta</td></tr>';
+      for (var i = 0; i < names.length; i++) {
+        var name = names[i];
+        html += '<tr><td><a href="reference/' + name + '.ie7.png">';
+        html += '<img src="reference/' + name + '.ie7.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.ie7.png">';
+        html += '<img src="latest/' + name + '.ie7.thumb.png"></a></td>';
+        html += '<td><a href="latest/' + name + '.ie7.delta.png">';
+        html += '<img src="latest/' + name + '.ie7.delta.thumb.png"></a></td></tr>';
+      }
+      html += '</table>';
+    }
+    
+    var divTag = document.getElementById('content');
+    divTag.innerHTML = html;  
+  }
+
+</script>
+</head>
+<body onload="generateContent();">
+<div id="content"></div>
+</body>
+</html>
+
