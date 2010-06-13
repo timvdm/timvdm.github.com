@@ -2,44 +2,46 @@
 <head></head>
 <body>
 
+    <h1>Array Creation</h1>
     <pre>
-    <b>// example 1: Use goog.array.repeat.</b>
-    var arr1 = goog.array.repeat(2, 100000);
+        <b>// example 1: Use goog.array.repeat.</b>
+        var arr1 = goog.array.repeat(2, 100000);
 
-    <b>// example 2: Use access by index</b>
-    var arr2 = [];
-    for (var i = 0; i &lt; 100000; i++) {
-        arr2[i] = 2;
-    }
+        <b>// example 2: Use access by index</b>
+        var arr2 = [];
+        for (var i = 0; i &lt; 100000; i++) {
+            arr2[i] = 2;
+        }
 
-    <b>// example 3: Allocate using access by index.</b>
-    var arr3 = [];
-    arr3[999] = 2;
-    for (var i = 0; i &lt; 100000; i++) {
-        arr3[i] = 2;
-    }
+        <b>// example 3: Allocate using access by index.</b>
+        var arr3 = [];
+        arr3[999] = 2;
+        for (var i = 0; i &lt; 100000; i++) {
+            arr3[i] = 2;
+        }
 
-    <b>// example 4: Use push</b>
-    var arr4 = [];
-    for (var i = 0; i &lt; 100000; i++) {
-        arr4.push(2);
-    }
+        <b>// example 4: Use push</b>
+        var arr4 = [];
+        for (var i = 0; i &lt; 100000; i++) {
+            arr4.push(2);
+        }
     </pre>
 
-<img src="create_array_ie.png"><img src="create_array.png">
+    <img src="create_array_ie.png"><img src="create_array.png">
 
+    <h1>Array iteration</h1>
     <pre>
         <b>// example 1: check arr.length each iteration</b>
         for (var i = 0; i &lt; arr.length; i++) {
             var tmp = arr[i] + arr[i];
         }
 
+        <font color="#008800">
         <b>// example 2: store arr.length in a variable</b>
         for (var i = 0, li = arr.length; i &lt; li; i++) {
             var tmp = arr[i] + arr[i];
         }
-
-
+        </font>
         <b>// example 3: for ... in ...</b>
         for (var i in arr) {
             var tmp = arr[i] + arr[i];
@@ -47,9 +49,29 @@
 
         <b>// example 4: forEach</b>
         arr.forEach(function(element, index, arr) { var tmp = arr[index] + arr[index]; });
-        </pre>
+    </pre>
 
-<img src="iterate_array_ie.png"><img src="iterate_array.png">
+    <img src="iterate_array_ie.png"><img src="iterate_array.png">
+
+    <h1>Function call overhead</h1>
+    <pre>
+        var obj = { x: [], getX: function(index) {return this.x[index]; } };
+        for (var i = 0; i &lt; 10000; i++) {
+            obj.x.push({});
+        }
+        <font color="#008800">
+        <b>// example 1: direct access</b>
+        for (var i = 0; i &lt; 10000; i++) {
+            obj.x[i];
+        }
+        </font>
+        <b>// example 2: wrapper function</b>
+        for (var i = 0; i &lt; 10000; i++) {
+            obj.getX(i);
+        }
+    </pre>
+
+    <img src="function_call.png">
 
 </body>
 </html>
