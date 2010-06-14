@@ -73,5 +73,25 @@
 
     <img src="function_call.png">
 
+    <h1>Stored indexes vs. goog.array.indexOf</h1>
+    <pre>
+    var arr = [];
+    for (var i = 0; i &lt; 1000; i++) {
+        arr.push({ index: i });
+    }
+    <font color="#008800">
+    <b>// example 1: stored indexes</b>
+    for (var i = 0; i &lt; 1000; i++) {
+        arr[arr.index];    
+    }
+    </font>
+    <b>// example 2: goog.array.indexOf</b>
+    for (var i = 0; i &lt; 1000; i++) {  
+        arr[goog.array.indexOf(arr, arr[i])];
+    }
+    </pre>
+
+    <img src="indexOf.png">
+
 </body>
 </html>
